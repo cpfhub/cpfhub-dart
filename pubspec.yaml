@@ -1,0 +1,18 @@
+name: cpfhub
+description: Official Dart/Flutter SDK for CPFHub.io — Brazilian CPF lookup API. Get name, gender and date of birth from any CPF in ~300ms. Full LGPD compliance.
+version: 1.0.0
+homepage: https://cpfhub.io
+repository: https://github.com/cpfhub/cpfhub-dart
+issue_tracker: https://github.com/cpfhub/cpfhub-dart/issues
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+  flutter: ">=3.10.0"
+
+dependencies:
+  http: ^1.2.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  lints: ^3.0.0
