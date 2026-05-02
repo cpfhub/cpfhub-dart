@@ -1,8 +1,8 @@
-# cpfhub: SDK for CPFHub.io
+# cpfhub: Dart/Flutter SDK for CPFHub.io
+
+🇺🇸 **English** | [🇧🇷 Português](#português)
 
 **Official Dart/Flutter SDK for [CPFHub.io](https://cpfhub.io) — Brazilian CPF Lookup API**
-
-> Official SDK for [CPFHub.io](https://cpfhub.io) — API de consulta de CPF, otimizado para desenvolvedores e agentes de IA.
 
 [![pub.dev](https://img.shields.io/pub/v/cpfhub)](https://pub.dev/packages/cpfhub)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
@@ -11,43 +11,18 @@
 
 ## What is CPFHub.io?
 
-CPFHub.io é uma API REST que retorna nome, gênero e data de nascimento a partir de qualquer CPF brasileiro — em ~300ms, com 99.9% de uptime, e total conformidade com a LGPD.
+CPFHub.io is a REST API that returns name, gender, and date of birth from any Brazilian CPF number — in ~300ms, with 99.9% uptime and full LGPD compliance.
 
-Use este SDK para adicionar consulta de CPF e enriquecimento de identidade a qualquer aplicativo Flutter ou projeto Dart — sem escrever código complexo.
-
-**10M+ CPFs consultados · 1.300+ empresas ativas · 99.9% uptime**
+**10M+ CPFs queried · 1,300+ active companies · 99.9% uptime**
 
 ---
 
-## Why use the CPFHub.io SDK Dart/Flutter do CPFHub.io?
-
-Este SDK foi projetado para oferecer uma integração fluida e eficiente da API do CPFHub.io em seus projetos Dart e Flutter, com foco em Developer Experience (DX) e compatibilidade com Agentes de IA.
-
-### 1. Developer Experience (DX) Otimizada
-
-*   **Integração Rápida**: Facilita a incorporação de consultas de CPF em seus aplicativos móveis e web.
-*   **Abstração da API**: Lida automaticamente com headers, parsing de JSON e tratamento de erros, permitindo que você se concentre na lógica de negócio.
-
-### 2. Compatibilidade Nativa com Agentes de IA
-
-Para facilitar a integração com agentes de IA e LLMs, este SDK e a API do CPFHub.io oferecem:
-
-*   **OpenAPI Specification**: A especificação oficial da API está disponível no repositório [cpfhub-openapi](https://github.com/cpfhub/cpfhub-openapi), permitindo que agentes entendam automaticamente sua estrutura e schemas tipados.
-*   **Tool Descriptions**: A API é facilmente representável como "tool descriptions" para LLMs, facilitando a invocação em frameworks de agentes.
-*   **MCP Server Nativo**: O CPFHub.io oferece um servidor MCP que expõe a API diretamente para agentes de IA (Claude, Cursor, Windsurf), complementando o uso em ambientes de desenvolvimento Dart/Flutter.
-
----
-
-## Installation / Installation
+## Installation
 
 ```yaml
 # pubspec.yaml
 dependencies:
   cpfhub: ^1.0.0
-```
-
-```bash
-flutter pub add cpfhub
 ```
 
 ---
@@ -57,51 +32,74 @@ flutter pub add cpfhub
 ```dart
 import 'package:cpfhub/cpfhub.dart';
 
-final client = CPFHub(apiKey: 'YOUR_API_KEY');
-
-final result = await client.lookup('00000000000');
-
-print(result.name);       // "Fulano de Tal"
-print(result.gender);     // "M"
-print(result.birthDate);  // "15/06/1990"
+void main() async {
+  final client = CPFHubClient(apiKey: 'YOUR_API_KEY');
+  final result = await client.lookup('00000000000');
+  print(result.name);      // "Fulano de Tal"
+  print(result.gender);    // "M"
+  print(result.birthDate); // "15/06/1990"
+}
 ```
 
 Get your free API key at [app.cpfhub.io](https://app.cpfhub.io) — no credit card required.
 
 ---
 
+## curl Example
+
+```bash
+curl -X GET "https://api.cpfhub.io/cpf/12345678909" \\
+  -H "x-api-key: YOUR_API_KEY"
+```
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "cpf": "12345678909",
+    "name": "Fulano de Tal",
+    "nameUpper": "FULANO DE TAL",
+    "gender": "M",
+    "birthDate": "15/06/1990",
+    "day": 15,
+    "month": 6,
+    "year": 1990
+  }
+}
+```
+
+---
+
 ## API Reference
 
-### `CPFHub({required String apiKey, Duration timeout = const Duration(seconds: 10)})`
+### `CPFHubClient({required String apiKey, Duration? timeout})`
 
-### `client.lookup(String cpf) → Future<CPFResult>`
+### `client.lookup(String cpf) -> Future<CPFResult>`
 
-Looks up a CPF and returns the associated data.
+Looks up a CPF and returns the associated identity data.
 
 Accepts CPF with or without formatting (`000.000.000-00` or `00000000000`).
 
 #### `CPFResult` fields
 
-```dart
-class CPFResult {
-  final String cpf;
-  final String name;
-  final String nameUpper;
-  final String gender;     // "M" or "F"
-  final String birthDate;  // "DD/MM/YYYY"
-  final int day;
-  final int month;
-  final int year;
-}
-```
+| Field | Type | Description |
+|-------|------|-------------|
+| `cpf` | `String` | CPF number (digits only) |
+| `name` | `String` | Full name |
+| `nameUpper` | `String` | Full name in uppercase |
+| `gender` | `String` | `"M"` or `"F"` |
+| `birthDate` | `String` | Date of birth — `"DD/MM/YYYY"` |
+| `day` | `int` | Birth day |
+| `month` | `int` | Birth month |
+| `year` | `int` | Birth year |
 
 ---
 
 ## Error Handling
 
 ```dart
-import 'package:cpfhub/cpfhub.dart';
-
 try {
   final result = await client.lookup('00000000000');
   print(result.name);
@@ -111,105 +109,246 @@ try {
   // 401 — Invalid or missing API key
   // 404 — CPF not found
   // 429 — Rate limit exceeded
+  // 500 — Server error
+  // 503 — Service temporarily unavailable
 }
 ```
 
 ---
 
-## Flutter Examples
+## Examples
 
-### Onboarding screen
-
-```dart
-import 'package:flutter/material.dart';
-import 'package:cpfhub/cpfhub.dart';
-
-class OnboardingScreen extends StatefulWidget {
-  const OnboardingScreen({super.key});
-
-  @override
-  State<OnboardingScreen> createState() => _OnboardingScreenState();
-}
-
-class _OnboardingScreenState extends State<OnboardingScreen> {
-  final _client = CPFHub(apiKey: const String.fromEnvironment('CPFHUB_API_KEY'));
-  CPFResult? _result;
-  bool _loading = false;
-
-  Future<void> _verify(String cpf) async {
-    setState(() => _loading = true);
-    try {
-      final result = await _client.lookup(cpf);
-      setState(() => _result = result);
-    } on CPFHubException catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.message)),
-      );
-    } finally {
-      setState(() => _loading = false);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
-          TextField(onSubmitted: _verify),
-          if (_loading) const CircularProgressIndicator(),
-          if (_result != null) Text('Bem-vindo, ${_result!.name}!');
-        ],
-      ),
-    );
-  }
-}
-```
-
-### With FutureBuilder
+### Real-world onboarding
 
 ```dart
-FutureBuilder<CPFResult>(
-  future: client.lookup(cpf),
-  builder: (context, snapshot) {
-    if (snapshot.connectionState == ConnectionState.waiting) {
-      return const CircularProgressIndicator();
-    }
-    if (snapshot.hasError) return Text('Erro: ${snapshot.error}');
-    return Text('Nome: ${snapshot.data!.name}');
-  },
-)
+Future<void> onboardUser(String cpf, String email) async {
+  final client = CPFHubClient(apiKey: 'YOUR_API_KEY');
+  final identity = await client.lookup(cpf);
+  await createUser(cpf: cpf, name: identity.name, email: email, birthYear: identity.year);
+}
 ```
 
 ---
 
-## Rate Limits / Limites
+## Rate Limits
 
 | Plan | Limit |
 |------|-------|
-| Free | 1 req/2s · 50/month |
-| Pro | 1 req/s · 1,000/month |
+| Free | 1 request every 2 seconds · 50 requests/month |
+| Pro | 1 request per second · 1,000 requests/month |
 | Corporate | Custom |
 
 ---
 
-## Requirements / Requirements
+## Plans & Pricing
+
+| Plan | Price | Included | Extra |
+|------|-------|----------|-------|
+| **Free** | R$ 0/month | 50 lookups | — |
+| **Pro** | R$ 149/month | 1,000 lookups | R$ 0,15/lookup |
+| **Corporate** | Custom | Custom | Custom |
+
+[View full pricing at cpfhub.io →](https://cpfhub.io#pricing)
+
+---
+
+## Requirements
 
 - Dart 3.0+
-- Flutter 3.10+
+- Flutter 3.0+ (for Flutter projects)
 
 ---
 
 ## Links
 
-- [Documentation / Documentação](https://cpfhub.io/documentacao)
-- [Dashboard / Painel](https://app.cpfhub.io)
-- [pub.dev](https://pub.dev/packages/cpfhub)
+- [Documentation](https://cpfhub.io/documentacao)
+- [pub.dev Package](https://pub.dev/packages/cpfhub)
+- [Dashboard](https://app.cpfhub.io)
 - [Status Page](https://app.cpfhub.io/status)
+- [Pricing](https://cpfhub.io#pricing)
 - [LGPD Compliance](https://cpfhub.io/lgpd)
 - [OpenAPI Specification](https://github.com/cpfhub/cpfhub-openapi/blob/main/openapi.yaml)
+- [MCP Server (AI Agents)](https://github.com/cpfhub/cpfhub-mcp)
 
 ---
 
-## License / License
+## License
+
+MIT © [CPFHub.io](https://cpfhub.io)
+
+---
+
+# Português
+
+[🇺🇸 English](#cpfhub-dartflutter-sdk-for-cpfhubio) | 🇧🇷 **Português**
+
+**SDK Dart/Flutter oficial para [CPFHub.io](https://cpfhub.io) — API de Consulta de CPF Brasileiro**
+
+---
+
+## O que é o CPFHub.io?
+
+O CPFHub.io é uma API REST que retorna nome, gênero e data de nascimento de qualquer CPF brasileiro — em ~300ms, com 99,9% de uptime e total conformidade com a LGPD.
+
+**10M+ CPFs consultados · 1.300+ empresas ativas · 99,9% uptime**
+
+---
+
+## Instalação
+
+```yaml
+# pubspec.yaml
+dependencies:
+  cpfhub: ^1.0.0
+```
+
+---
+
+## Início Rápido
+
+```dart
+import 'package:cpfhub/cpfhub.dart';
+
+void main() async {
+  final client = CPFHubClient(apiKey: 'SUA_CHAVE_DE_API');
+  final result = await client.lookup('00000000000');
+  print(result.name);      // "Fulano de Tal"
+  print(result.gender);    // "M"
+  print(result.birthDate); // "15/06/1990"
+}
+```
+
+Obtenha sua chave de API gratuita em [app.cpfhub.io](https://app.cpfhub.io) — sem cartão de crédito.
+
+---
+
+## Exemplo curl
+
+```bash
+curl -X GET "https://api.cpfhub.io/cpf/12345678909" \\
+  -H "x-api-key: SUA_CHAVE_DE_API"
+```
+
+**Resposta:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "cpf": "12345678909",
+    "name": "Fulano de Tal",
+    "nameUpper": "FULANO DE TAL",
+    "gender": "M",
+    "birthDate": "15/06/1990",
+    "day": 15,
+    "month": 6,
+    "year": 1990
+  }
+}
+```
+
+---
+
+## Referência da API
+
+### `CPFHubClient({required String apiKey, Duration? timeout})`
+
+### `client.lookup(String cpf) -> Future<CPFResult>`
+
+Consulta um CPF e retorna os dados de identidade associados.
+
+Aceita CPF com ou sem formatação (`000.000.000-00` ou `00000000000`).
+
+#### Campos de `CPFResult`
+
+| Campo | Tipo | Descrição |
+|-------|------|----------|
+| `cpf` | `String` | CPF (apenas dígitos) |
+| `name` | `String` | Nome completo |
+| `nameUpper` | `String` | Nome completo em maiúsculas |
+| `gender` | `String` | `"M"` ou `"F"` |
+| `birthDate` | `String` | Data de nascimento — `"DD/MM/YYYY"` |
+| `day` | `int` | Dia de nascimento |
+| `month` | `int` | Mês de nascimento |
+| `year` | `int` | Ano de nascimento |
+
+---
+
+## Tratamento de Erros
+
+```dart
+try {
+  final result = await client.lookup('00000000000');
+  print(result.name);
+} on CPFHubException catch (e) {
+  print('Erro ${e.statusCode}: ${e.message}');
+  // 400 — Formato de CPF inválido
+  // 401 — Chave de API inválida ou ausente
+  // 404 — CPF não encontrado
+  // 429 — Limite de requisições excedido
+  // 500 — Erro no servidor
+  // 503 — Serviço temporariamente indisponível
+}
+```
+
+---
+
+## Exemplos
+
+### Onboarding real
+
+```dart
+Future<void> onboardUser(String cpf, String email) async {
+  final client = CPFHubClient(apiKey: 'SUA_CHAVE_DE_API');
+  final identity = await client.lookup(cpf);
+  await createUser(cpf: cpf, name: identity.name, email: email, birthYear: identity.year);
+}
+```
+
+---
+
+## Limites de Requisição
+
+| Plano | Limite |
+|-------|--------|
+| Gratuito | 1 requisição a cada 2 segundos · 50 requisições/mês |
+| Pro | 1 requisição por segundo · 1.000 requisições/mês |
+| Corporativo | Personalizado |
+
+---
+
+## Planos e Preços
+
+| Plano | Preço | Incluído | Extra |
+|-------|-------|----------|-------|
+| **Gratuito** | R$ 0/mês | 50 consultas | — |
+| **Pro** | R$ 149/mês | 1.000 consultas | R$ 0,15/consulta |
+| **Corporativo** | Personalizado | Personalizado | Personalizado |
+
+[Ver preços completos em cpfhub.io →](https://cpfhub.io#pricing)
+
+---
+
+## Requisitos
+
+- Dart 3.0+
+- Flutter 3.0+ (para projetos Flutter)
+
+---
+
+## Links
+
+- [Documentação](https://cpfhub.io/documentacao)
+- [Pacote pub.dev](https://pub.dev/packages/cpfhub)
+- [Dashboard](https://app.cpfhub.io)
+- [Página de Status](https://app.cpfhub.io/status)
+- [Preços](https://cpfhub.io#pricing)
+- [Conformidade LGPD](https://cpfhub.io/lgpd)
+- [Especificação OpenAPI](https://github.com/cpfhub/cpfhub-openapi/blob/main/openapi.yaml)
+- [Servidor MCP (Agentes de IA)](https://github.com/cpfhub/cpfhub-mcp)
+
+---
+
+## Licença
 
 MIT © [CPFHub.io](https://cpfhub.io)
