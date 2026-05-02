@@ -1,15 +1,15 @@
-# cpfhub: SDK Dart/Flutter para Consulta de CPF (AI-Native)
+# cpfhub: SDK for CPFHub.io
 
 **Official Dart/Flutter SDK for [CPFHub.io](https://cpfhub.io) — Brazilian CPF Lookup API**
 
-> SDK oficial Dart/Flutter para a [CPFHub.io](https://cpfhub.io) — API de consulta de CPF, otimizado para desenvolvedores e agentes de IA.
+> Official SDK for [CPFHub.io](https://cpfhub.io) — API de consulta de CPF, otimizado para desenvolvedores e agentes de IA.
 
 [![pub.dev](https://img.shields.io/pub/v/cpfhub)](https://pub.dev/packages/cpfhub)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 ---
 
-## O que é CPFHub.io?
+## What is CPFHub.io?
 
 CPFHub.io é uma API REST que retorna nome, gênero e data de nascimento a partir de qualquer CPF brasileiro — em ~300ms, com 99.9% de uptime, e total conformidade com a LGPD.
 
@@ -19,7 +19,7 @@ Use este SDK para adicionar consulta de CPF e enriquecimento de identidade a qua
 
 ---
 
-## Por que usar o SDK Dart/Flutter do CPFHub.io?
+## Why use the CPFHub.io SDK Dart/Flutter do CPFHub.io?
 
 Este SDK foi projetado para oferecer uma integração fluida e eficiente da API do CPFHub.io em seus projetos Dart e Flutter, com foco em Developer Experience (DX) e compatibilidade com Agentes de IA.
 
@@ -38,7 +38,7 @@ Para facilitar a integração com agentes de IA e LLMs, este SDK e a API do CPFH
 
 ---
 
-## Installation / Instalação
+## Installation / Installation
 
 ```yaml
 # pubspec.yaml
@@ -192,7 +192,7 @@ FutureBuilder<CPFResult>(
 
 ---
 
-## Requirements / Requisitos
+## Requirements / Requirements
 
 - Dart 3.0+
 - Flutter 3.10+
@@ -210,6 +210,6 @@ FutureBuilder<CPFResult>(
 
 ---
 
-## License / Licença
+## License / License
 
 MIT © [CPFHub.io](https://cpfhub.io)
